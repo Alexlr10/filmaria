@@ -1,7 +1,10 @@
+import './App.css'
+import Routes from './routes'
+
 export default function App() {
   return (
-    <div>
-      <h1>Filmaria</h1>
+    <div className="app">
+      <Routes/>
     </div>
   )
 }
