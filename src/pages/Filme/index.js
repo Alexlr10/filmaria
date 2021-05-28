@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router'
 import api from '../../service/api';
 import './filme-info.css'
-
+import { toast } from 'react-toastify'
 
 export default function Filme() {
     const { id } = useParams();
@@ -26,10 +26,23 @@ export default function Filme() {
         }
         loadFilmes();
 
-        return () => {
-
-        }
+     
     }, [history, id]);
+
+    function salvaFilme() {
+        const minhaLista = localStorage.getItem('filmes');
+        let filmesSalvos = JSON.parse(minhaLista) || []; // Caso a variavel minhaLista esteja vazio retorna um array vazio
+
+        const hasFilme = filmesSalvos.some((filmesSalvo) => filmesSalvo.id === filme.id)
+        
+        if (hasFilme) {
+            toast.info("Voce ja possui esse filme salvo.")
+            return;
+        }
+        filmesSalvos.push(filme);
+        localStorage.setItem('filmes', JSON.stringify(filmesSalvos));
+        toast.success("Filme salvo com sucesso!")
+    }
 
     if (loading) {
         return (
@@ -46,7 +59,7 @@ export default function Filme() {
             <h3>Sinopse</h3>
             {filme.sinopse}
             <div className="botoes">
-                <button onClick={() => { }}>Salvar</button>
+                <button onClick={salvaFilme}>Salvar</button>
                 <button>
                     <a target="blank" href={`https://www.youtube.com/results?search_query=${filme.nome} Trailer`}>
                         Trailer
